@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blood Sugar Detection</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f2f5; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        input[type="file"] { margin: 1rem 0; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 1.5rem; font-weight: bold; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Blood Sugar Detection</h1>
+        <p>Upload a glucometer image</p>
+        <form id="upload-form">
+            <input type="file" name="file" accept="image/*" required><br>
+            <button type="submit">Predict Blood Sugar</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerText = 'Processing...';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.blood_sugar) {
+                    resultDiv.innerText = `Detected Blood Sugar: ${result.blood_sugar}`;
+                } else {
+                    resultDiv.innerText = `Error: ${result.error || 'Unknown error'}`;
+                }
+            } catch (err) {
+                resultDiv.innerText = 'Error connecting to server.';
+            }
+        };
+    </script>
+</body>
+</html>
