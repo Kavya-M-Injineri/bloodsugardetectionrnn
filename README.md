@@ -1,4 +1,4 @@
-# Blood Sugar RNN Classifier 11111
+# Blood Sugar RNN Classifier 
 
 > RNN-based model that reads blood sugar readings from uploaded images, with digit extraction and image verification — served via a Flask web application.
 
